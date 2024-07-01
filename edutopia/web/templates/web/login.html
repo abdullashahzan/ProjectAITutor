@@ -1,0 +1,17 @@
+{% extends 'web/layout.html' %}
+{% block title %}
+<title>Login</title>
+{% endblock %}
+{% block body %}
+<form action="/login" method="POST">
+    {% csrf_token %}
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" required><br><br>
+    
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required><br><br>
+    
+    <input type="submit" value="Login">
+</form>
+<p>Don't have an account? <a href="{% url 'web:signup_user' %}">Sign up</a></p>
+{% endblock %}
