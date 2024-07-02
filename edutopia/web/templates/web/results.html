@@ -1,0 +1,72 @@
+{% extends 'web/layout.html' %}
+
+{% block title %}
+<title>Evaluation test</title>
+{% endblock %}
+
+{% block body %}
+
+<h1>Quiz Results</h1>
+<p>Your score: {{ quiz.score }} / {{ quiz.total_score }}</p>
+<hr>
+
+{% for question, answers in quiz_data.items %}
+<strong>{{question}}</strong>
+<ul>
+    <li>Correct answer: {{answers.correct_answer}}</li>
+    <li>Your answer: {{answers.student_answer}}</li>
+</ul>
+{% endfor %}
+
+<br><hr>
+<h1>Here are some suggestions by the AI to improve your performance</h1>
+{{ suggestion }}
+<hr>
+
+<h1>Would you like me to explain you anything?</h1>
+<!-- Question form -->
+<form id="question-form" method="post">
+    {% csrf_token %}
+    <input type="text" id="question-input" name="question" placeholder="Ask a question">
+    <button type="submit">Submit</button>
+</form>
+
+<!-- Container to display the response -->
+<div id="response-container"></div>
+
+<br>
+<a href="{% url 'web:index' %}">Home</a>
+
+<script>
+    $(document).ready(function () {
+    $('#question-form').on('submit', function (event) {
+        event.preventDefault(); // Prevent the form from submitting via the browser
+
+        const csrfToken = $('input[name="csrfmiddlewaretoken"]').val();
+        const question = $('#question-input').val();
+
+        $.ajax({
+            url: '/ai_tutor/',  // Replace with your actual endpoint URL
+            type: 'POST',
+            headers: {
+                'X-CSRFToken': csrfToken
+            },
+            contentType: 'application/json',
+            data: JSON.stringify({
+                question: question
+            }),
+            success: function (response) {
+                // Update the response container with the server's response
+                $('#response-container').html('<p>' + response.message + '</p>');
+            },
+            error: function (error) {
+                console.error('Error:', error);
+                $('#response-container').html('<p>An error occurred. Please try again.</p>');
+            }
+        });
+    });
+});
+</script>
+
+
+{% endblock %}

@@ -11,6 +11,23 @@
 {% if note %}
 <h1>Notes uploaded!</h1>
 <a href="{% url 'web:remove_note' note.id %}">Remove note</a>
+<form action="{% url 'web:ai_evaluator' %}" method="post">
+    {% csrf_token %}
+    <label>
+        <input type="radio" name="quiz" value="mcq">
+        Take a quiz (MCQs)
+    </label>
+    <label>
+        <input type="radio" name="quiz" value="written">
+        Test your knowledge (Written)
+    </label>
+    <label>
+        <input type="radio" name="quiz" value="challenge">
+        Challenge yourself (Written)
+    </label>
+    <button type="submit">Submit</button>
+</form>
+<hr>
 {% else %}
 <h1>Upload Note</h1>
 <form method="post" action="{% url 'web:upload_note' %}" enctype="multipart/form-data">
@@ -22,51 +39,8 @@
 <div id="uploaded-file"></div>
 {% endif %}
 
-<hr><br>
-
-<!-- Question form -->
-<form id="question-form" method="post">
-    {% csrf_token %}
-    <input type="text" id="question-input" name="question" placeholder="Ask a question">
-    <button type="submit">Submit</button>
-</form>
-
-<!-- Container to display the response -->
-<div id="response-container"></div>
 
 <br>
 <a href="{% url 'web:index' %}">Home</a>
-
-<script>
-    $(document).ready(function () {
-    $('#question-form').on('submit', function (event) {
-        event.preventDefault(); // Prevent the form from submitting via the browser
-
-        const csrfToken = $('input[name="csrfmiddlewaretoken"]').val();
-        const question = $('#question-input').val();
-
-        $.ajax({
-            url: '/ai_tutor/',  // Replace with your actual endpoint URL
-            type: 'POST',
-            headers: {
-                'X-CSRFToken': csrfToken
-            },
-            contentType: 'application/json',
-            data: JSON.stringify({
-                question: question
-            }),
-            success: function (response) {
-                // Update the response container with the server's response
-                $('#response-container').html('<p>' + response.message + '</p>');
-            },
-            error: function (error) {
-                console.error('Error:', error);
-                $('#response-container').html('<p>An error occurred. Please try again.</p>');
-            }
-        });
-    });
-});
-</script>
-
 
 {% endblock %}
