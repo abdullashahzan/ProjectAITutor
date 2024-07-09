@@ -1,0 +1,9 @@
+{% extends 'web/layout.html' %}
+
+{% block title %}
+<title>Most important questions</title>
+{% endblock %}
+
+{% block body %}
+<p>{{note.important_questions | safe}}</p>
+{% endblock %}

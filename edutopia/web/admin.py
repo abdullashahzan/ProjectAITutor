@@ -5,3 +5,6 @@ from .models import *
 admin.site.register(UserProfile)
 admin.site.register(Note)
 admin.site.register(Quiz)
+admin.site.register(Subject)
+admin.site.register(Research)
+admin.site.register(Project)

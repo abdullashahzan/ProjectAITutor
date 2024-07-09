@@ -4,7 +4,7 @@ from groq import Groq
 
 # Keep it highly secure (DO NOT SHARE IT WITH ANYONE!)
 client = Groq(
-    api_key="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",
+    api_key="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",
 )
 
 def ask_tutor(content):

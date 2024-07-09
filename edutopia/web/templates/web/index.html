@@ -1,10 +1,152 @@
 {% extends 'web/layout.html' %}
 
 {% block title %}
-<title>Home</title>
+{% if request.user.is_authenticated %}
+<title>Welcome, {{request.user.username}}!</title>
+{% else %}
+<title>Welcome, user!</title>
+{% endif %}
 {% endblock %}
 
+
 {% block body %}
+<div class="add-subject d-none justify-content-center align-items-center"
+    style="min-height: 100vh; background-color: rgba(0, 0, 0, 0.5);">
+    <div class="container bg-light" style="height: 30vh;">
+        <form action="{% url 'web:add_subject' %}" method="post">
+            {% csrf_token %}
+            <h1>Please enter the name of the subject</h1>
+            <input type="text" name="subject_name">
+            <input type="submit">
+        </form>
+        <button onclick="closeSubject()">Close</button>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-1 p-1">
+            <ul class="list-unstyled">
+                <li><a href="">Home</a></li>
+                <li><a href="{% url 'web:index' %}">Dashboard</a></li>
+                <li><a href="{% url 'web:ai_tutor' 0 %}">AI tutor</a></li>
+                {% if request.user.is_authenticated %}
+                <li><a href="{% url 'web:logout_user' %}">Logout</a></li>
+                {% else %}
+                <li><a href="{% url 'web:login_user' %}">Sign in</a></li>
+                <li><a href="{% url 'web:signup_user' %}">Create new account</a></li>
+                {% endif %}
+            </ul>
+        </div>
+
+        <div class="col-md-8">
+            <div class="row p-1">
+                <div class="col-12 bg-light">
+                    <h1>Welcome, {{request.user.username}} we wish you a good day!</h1>
+                    <p class="text-muted">You are doing great!</p>
+                </div>
+                {% for subject in subjects %}
+                <div class="card col-4" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ subject.subject_name }}</h5>
+                        <h6 class="card-subtitle mb-2 text-body-secondary">Number of notes: {{subject.num_notes}}</h6>
+                        <p class="card-text">Progress {{ subject.progress }}%</p>
+                        <a href="{% url 'web:open_subject' subject.id %}" class="card-link">Open</a>
+                        <a href="{% url 'web:remove_subject' subject.id %}" class="card-link">Remove</a>
+                    </div>
+                </div>
+                {% endfor %}
+                <div class="card col-4" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">Add a subject</h5>
+                        <button onclick="openSubject()">Add</button>
+                    </div>
+                </div>
+                <hr>
+                <div class="col-12">
+                    <button onclick="openGraph('quiz')">Open Quiz</button>
+                    <button onclick="openGraph('research')">Open Research</button>
+                    <button onclick="openGraph('project')">Open Project</button>
+
+                    <div class="graph-container-quiz mt-2" style="min-height: 50vh; background-color: gray;">
+                        <p class="text-light">Graph for quiz</p>
+                    </div>
+                    <div class="graph-container-research mt-2 d-none" style="min-height: 50vh; background-color: gray;">
+                        <p class="text-light">Graph for research</p>
+                    </div>
+                    <div class="graph-container-projects mt-2 d-none" style="min-height: 50vh; background-color: gray;">
+                        <p class="text-light">Graph for projects</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="row p-1">
+                <div class="col-12 bg-light">
+                    <h2>Needs improvement</h2>
+                    <hr>
+                    <ul>
+                        {% for improvement in improvements %}
+                        <li><a href="">Something you need to work on</a></li>
+                        {% empty %}
+                        <p class="text-muted">You don't need to work on anything for now.</p>
+                        {% endfor %}
+                        <a href="">See all</a>
+                    </ul>
+                </div>
+                <div class="col-12 bg-light mt-2">
+                    <h2>Upcoming events</h2>
+                    <hr>
+                    <ul>
+                        {% for event in events %}
+                        <li><a href="">Something you need to work on</a></li>
+                        {% empty %}
+                        <p class="text-muted">There are no upcoming events.</p>
+                        {% endfor %}
+                        <a href="">See all</a>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const model = document.querySelector('.add-subject');
+    function openSubject() {
+        model.classList.remove('d-none');
+        model.classList.add('d-flex');
+    }
+    function closeSubject() {
+        model.classList.remove('d-flex');
+        model.classList.add('d-none');
+    }
+    function openGraph(graphType) {
+        // Hide all graph containers
+        document.querySelector('.graph-container-quiz').classList.add('d-none');
+        document.querySelector('.graph-container-research').classList.add('d-none');
+        document.querySelector('.graph-container-projects').classList.add('d-none');
+
+        // Show the selected graph container
+        if (graphType === 'quiz') {
+            document.querySelector('.graph-container-quiz').classList.remove('d-none');
+        } else if (graphType === 'research') {
+            document.querySelector('.graph-container-research').classList.remove('d-none');
+        } else if (graphType === 'project') {
+            document.querySelector('.graph-container-projects').classList.remove('d-none');
+        }
+    }
+
+</script>
+{% endblock %}
+
+
+<!-- 
+
+OLD code
+
+
+
 <h1>Homepage</h1>
 {% if user.is_authenticated %}
     <ul>
@@ -20,6 +162,9 @@
 <ul>
     <li><a href="{% url 'web:ai_tutor' %}">AI tutor</a></li>
     <li><a href="{% url 'web:ai_evaluator' %}">AI evaluator</a></li>
-    <li><a href="">AI scheduler</a></li>
+    <li><a href="{% url 'web:ai_evaluator' %}">Practical assignments</a></li>
+    <li><a href="">Research</a></li>
+    <li><a href="">Group project</a></li>
 </ul>
-{% endblock %}
+
+-->

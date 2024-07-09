@@ -1,0 +1,71 @@
+{% extends 'web/layout.html' %}
+
+{% block title %}
+<title>{{note.name}}</title>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>{{note.name}}</h1>
+    <p>Your current progress: {{note.note_progress}}%</p>
+    <div class="row">
+        <h1>Learn</h1>
+        <hr>
+        <div class="card col-4">
+            <div class="card-body">
+                <h5 class="card-title">AI tutor</h5>
+                <hr>
+                <p class="text-muted">Ask AI tutor to help you understand these notes or to clear any of your doubts and
+                    to answer all of your questions.</p>
+                <a href="{% url 'web:ai_tutor' note.id %}" class="card-link">Talk with tutor</a>
+            </div>
+        </div>
+        <div class="card col-4" >
+            <div class="card-body">
+                <h5 class="card-title">Most important questions</h5>
+                <hr>
+                <p class="text-muted">A list of most important questions that have the highest probability of appearing in final exam according to AI.</p>
+                <a href="{% url 'web:important_questions' note.id %}" class="card-link">Show me</a>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <h1>Train</h1>
+        <hr>
+        <div class="card col-4" >
+            <div class="card-body">
+                <h5 class="card-title">Practice quiz</h5>
+                <hr>
+                <p class="text-muted">Ask AI evaluator to generate you a MCQ quiz based on your notes to train yourself.</p>
+                <a href="{% url 'web:ai_evaluator' note.id 'mcq' %}" class="card-link">Attend quiz</a>
+            </div>
+        </div>
+    </div>
+    {% if note.research_required == True or note.practical_required == True %}
+    <div class="row">
+        <h1>Evaluate</h1>
+        <hr>
+        {% if note.research_required == True %}
+        <div class="card col-4" >
+            <div class="card-body">
+                <h5 class="card-title">Research</h5>
+                <hr>
+                <p class="text-muted">Ask AI researcher to generate you a topic based on your notes and submit a short research on it.</p>
+                <a href="{% url 'web:ai_research' note.id %}" class="card-link">Start research</a>
+            </div>
+        </div>
+        {% endif %}
+        {% if note.practical_required == True %}
+        <div class="card col-4" >
+            <div class="card-body">
+                <h5 class="card-title">Practical experience</h5>
+                <hr>
+                <p class="text-muted">Get hands on practical experience by completing the AI provided projects and submitting a report based on it.</p>
+                <a href="{% url 'web:ai_project_manager' note.id %}" class="card-link">Open</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -7,65 +7,63 @@
 {% block body %}
 <!-- Hidden CSRF token input -->
 <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+<div class="container">
+    <h1>AI tutor</h1>
+    <p class="text-muted">Clear any of your doubts or understand complete chapter again with the help of our smart AI.
+    </p>
+    <hr><br>
 
-{% if note %}
-<h1>Notes uploaded!</h1>
-<a href="{% url 'web:remove_note' note.id %}">Remove note</a>
-{% else %}
-<h1>Upload Note</h1>
-<form method="post" action="{% url 'web:upload_note' %}" enctype="multipart/form-data">
-    {% csrf_token %}
-    <label for="file">File:</label>
-    <input type="file" id="file" name="file" required>
-    <button type="submit">Upload</button>
-</form>
-<div id="uploaded-file"></div>
-{% endif %}
+    <!-- Question form -->
+    <form id="question-form" method="post">
+        {% csrf_token %}
+        <input type="text" id="question-input" name="question" placeholder="Ask a question">
+        <button type="submit">Submit</button>
+    </form>
+    <br>
 
-<hr><br>
+    <!-- Container to display the response -->
+    <p><strong>Responses:</strong></p> <br>
+    <div id="response-container"></div>
 
-<!-- Question form -->
-<form id="question-form" method="post">
-    {% csrf_token %}
-    <input type="text" id="question-input" name="question" placeholder="Ask a question">
-    <button type="submit">Submit</button>
-</form>
-
-<!-- Container to display the response -->
-<div id="response-container"></div>
-
-<br>
-<a href="{% url 'web:index' %}">Home</a>
+    <br>
+    <a href="{% url 'web:index' %}">Home</a>
+</div>
 
 <script>
     $(document).ready(function () {
-    $('#question-form').on('submit', function (event) {
-        event.preventDefault(); // Prevent the form from submitting via the browser
+        $('#question-form').on('submit', function (event) {
+            event.preventDefault(); // Prevent the form from submitting via the browser
 
-        const csrfToken = $('input[name="csrfmiddlewaretoken"]').val();
-        const question = $('#question-input').val();
+            const csrfToken = $('input[name="csrfmiddlewaretoken"]').val();
+            const question = $('#question-input').val();
 
-        $.ajax({
-            url: '/ai_tutor/',  // Replace with your actual endpoint URL
-            type: 'POST',
-            headers: {
-                'X-CSRFToken': csrfToken
-            },
-            contentType: 'application/json',
-            data: JSON.stringify({
-                question: question
-            }),
-            success: function (response) {
-                // Update the response container with the server's response
-                $('#response-container').html('<p>' + response.message + '</p>');
-            },
-            error: function (error) {
-                console.error('Error:', error);
-                $('#response-container').html('<p>An error occurred. Please try again.</p>');
+            if ('{{is_note}}' == 'no'){
+                var url_link = '/ai_tutor/0'
+            } else {
+                var url_link = '/ai_tutor/{{note.id}}'
             }
+
+            $.ajax({
+                url: url_link,  // Replace with your actual endpoint URL
+                type: 'POST',
+                headers: {
+                    'X-CSRFToken': csrfToken
+                },
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    question: question
+                }),
+                success: function (response) {
+                    // Update the response container with the server's response
+                    $('#response-container').html('<p>' + response.message + '</p>');
+                },
+                error: function (error) {
+                    console.error('Error:', error);
+                    $('#response-container').html('<p>An error occurred. Please try again.</p>');
+                }
+            });
         });
     });
-});
 </script>
 
 

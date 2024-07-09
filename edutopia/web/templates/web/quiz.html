@@ -7,12 +7,14 @@
 {% block body %}
 
 <h1>OOP Quiz</h1>
-<form method="post" action="{% url 'web:evaluate_student' quiz_id %}">
+<form method="post" action="{% url 'web:evaluate_student' %}">
+    <input type="hidden" name="quiz_id" value="{{quiz.id}}">
+    <input type="hidden" name="note_id" value="{{note.id}}">
     {% csrf_token %}
     {% for question, options in test.test.items %}
     <div>
         <p><strong>{{ question }}</strong></p>
-        {% if quiz_type == 'MCQ' %}
+        {% if quiz.quiz_type == 'MCQ' %}
             {% for option in options %}
             <div>
                 <label>
