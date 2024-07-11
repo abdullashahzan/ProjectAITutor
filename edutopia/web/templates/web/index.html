@@ -1,170 +1,350 @@
-{% extends 'web/layout.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block title %}
-{% if request.user.is_authenticated %}
-<title>Welcome, {{request.user.username}}!</title>
-{% else %}
-<title>Welcome, user!</title>
-{% endif %}
-{% endblock %}
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sidebar With Bootstrap</title>
+    <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous" />
+    <!-- Static files (CSS) -->
+    <link rel="stylesheet" href="{% static 'web/style.css' %}">
+</head>
 
-
-{% block body %}
-<div class="add-subject d-none justify-content-center align-items-center"
-    style="min-height: 100vh; background-color: rgba(0, 0, 0, 0.5);">
-    <div class="container bg-light" style="height: 30vh;">
-        <form action="{% url 'web:add_subject' %}" method="post">
-            {% csrf_token %}
-            <h1>Please enter the name of the subject</h1>
-            <input type="text" name="subject_name">
-            <input type="submit">
-        </form>
-        <button onclick="closeSubject()">Close</button>
+<body>
+    <div class="add-subject d-none justify-content-center align-items-center"
+        style="min-height: 100vh; background-color: rgba(0, 0, 0, 0.5);">
+        <div class="container bg-light" style="height: 30vh;">
+            <form action="{% url 'web:add_subject' %}" method="post">
+                {% csrf_token %}
+                <h1>Please enter the name of the subject</h1>
+                <input type="text" name="subject_name">
+                <input type="submit">
+            </form>
+            <button onclick="closeSubject()">Close</button>
+        </div>
     </div>
-</div>
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-md-1 p-1">
-            <ul class="list-unstyled">
-                <li><a href="">Home</a></li>
-                <li><a href="{% url 'web:index' %}">Dashboard</a></li>
-                <li><a href="{% url 'web:ai_tutor' 0 %}">AI tutor</a></li>
-                {% if request.user.is_authenticated %}
-                <li><a href="{% url 'web:logout_user' %}">Logout</a></li>
-                {% else %}
-                <li><a href="{% url 'web:login_user' %}">Sign in</a></li>
-                <li><a href="{% url 'web:signup_user' %}">Create new account</a></li>
-                {% endif %}
+    <div class="wrapper">
+        <!-- Sidebar -->
+        <aside id="sidebar">
+            <div class="d-flex">
+                <button class="toggle-btn" type="button">
+                    <i class="lni lni-grid-alt"></i>
+                </button>
+                <div class="sidebar-logo">
+                    <a href="{% url 'web:landing' %}">Edutopia</a>
+                </div>
+            </div>
+            <ul class="sidebar-nav">
+                <li class="sidebar-item">
+                    <a href="{% url 'web:index' %}" class="sidebar-link">
+                        <i class="lni lni-user"></i>
+                        <span>لوحة التحكم</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="{% url 'web:ai_tutor' 0 %}" class="sidebar-link">
+                        <i class="lni lni-agenda"></i>
+                        <span>معلم</span>
+                    </a>
+                </li>
+                <!-- <li class="sidebar-item">
+                    <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
+                        data-bs-target="#auth" aria-expanded="false" aria-controls="auth">
+                        <i class="lni lni-protection"></i>
+                        <span>Auth</span>
+                    </a>
+                    <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                        <li class="sidebar-item">
+                            <a href="#" class="sidebar-link">Login</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="#" class="sidebar-link">Register</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
+                        data-bs-target="#multi" aria-expanded="false" aria-controls="multi">
+                        <i class="lni lni-layout"></i>
+                        <span>Multi Level</span>
+                    </a>
+                    <ul id="multi" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                        <li class="sidebar-item">
+                            <a href="#" class="sidebar-link collapsed" data-bs-toggle="collapse"
+                                data-bs-target="#multi-two" aria-expanded="false" aria-controls="multi-two">
+                                Two Links
+                            </a>
+                            <ul id="multi-two" class="sidebar-dropdown list-unstyled collapse">
+                                <li class="sidebar-item">
+                                    <a href="#" class="sidebar-link">Link 1</a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a href="#" class="sidebar-link">Link 2</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li> -->
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link">
+                        <i class="lni lni-popup"></i>
+                        <span>الدردشات</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="#" class="sidebar-link">
+                        <i class="lni lni-cog"></i>
+                        <span>بنك المهارات</span>
+                    </a>
+                </li>
             </ul>
-        </div>
+            <div class="sidebar-footer">
+                {% if request.user.is_authenticated %}
+                <a href="{% url 'web:logout_user' %}" class="sidebar-link">
+                    <i class="lni lni-exit"></i>
+                    <span>Logout</span>
+                </a>
+                {% else %}
+                <a href="{% url 'web:login_user' %}" class="sidebar-link">
+                    <i class="lni lni-exit"></i>
+                    <span>Sign in</span>
+                </a>
+                {% endif %}
+            </div>
+        </aside>
+        <!-- Sidebar ends -->
 
-        <div class="col-md-8">
-            <div class="row p-1">
-                <div class="col-12 bg-light">
-                    <h1>Welcome, {{request.user.username}} we wish you a good day!</h1>
-                    <p class="text-muted">You are doing great!</p>
+        <div class="main">
+            <!-- Navbar -->
+            <div class="navbar">
+                <div class="navbar-welcome">
+                    <h1>مرحبًا {{request.user.username}}, أتمنى لك يومًا رائعًا</h1>
+                    <p>إنك تحقق تقدمًا ملحوظًا بناءً على تقييماتك!</p>
                 </div>
-                {% for subject in subjects %}
-                <div class="card col-4" style="width: 18rem;">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ subject.subject_name }}</h5>
-                        <h6 class="card-subtitle mb-2 text-body-secondary">Number of notes: {{subject.num_notes}}</h6>
-                        <p class="card-text">Progress {{ subject.progress }}%</p>
-                        <a href="{% url 'web:open_subject' subject.id %}" class="card-link">Open</a>
-                        <a href="{% url 'web:remove_subject' subject.id %}" class="card-link">Remove</a>
+                <div class="navbar-details">
+                    <div class="navbar-search">
+                        <form class="form-inline">
+                            <input class="form-control mr-sm-2" type="search" placeholder="البحث" aria-label="Search" />
+                        </form>
                     </div>
-                </div>
-                {% endfor %}
-                <div class="card col-4" style="width: 18rem;">
-                    <div class="card-body">
-                        <h5 class="card-title">Add a subject</h5>
-                        <button onclick="openSubject()">Add</button>
-                    </div>
-                </div>
-                <hr>
-                <div class="col-12">
-                    <button onclick="openGraph('quiz')">Open Quiz</button>
-                    <button onclick="openGraph('research')">Open Research</button>
-                    <button onclick="openGraph('project')">Open Project</button>
-
-                    <div class="graph-container-quiz mt-2" style="min-height: 50vh; background-color: gray;">
-                        <p class="text-light">Graph for quiz</p>
-                    </div>
-                    <div class="graph-container-research mt-2 d-none" style="min-height: 50vh; background-color: gray;">
-                        <p class="text-light">Graph for research</p>
-                    </div>
-                    <div class="graph-container-projects mt-2 d-none" style="min-height: 50vh; background-color: gray;">
-                        <p class="text-light">Graph for projects</p>
+                    <div class="navbar-settings">
+                        <div class="navbar-bell">
+                            <svg width="31" height="31" viewBox="0 0 31 31" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                    d="M15.5357 4.05225C15.5357 3.7149 15.4017 3.39137 15.1632 3.15283C14.9246 2.91428 14.6011 2.78027 14.2638 2.78027C13.9264 2.78027 13.6029 2.91428 13.3643 3.15283C13.1258 3.39137 12.9918 3.7149 12.9918 4.05225V5.00623H12.2833C10.9198 5.00614 9.60749 5.52569 8.61356 6.45912C7.61964 7.39255 7.01881 8.66968 6.93339 10.0305L6.65228 14.5257C6.54509 16.2396 5.96961 17.8912 4.98854 19.3007C4.78583 19.592 4.66197 19.9309 4.62901 20.2843C4.59604 20.6377 4.6551 20.9936 4.80043 21.3174C4.94576 21.6413 5.17242 21.922 5.45836 22.1323C5.74431 22.3425 6.07981 22.4753 6.43223 22.5175L10.7658 23.0364V24.4038C10.7658 25.3315 11.1344 26.2212 11.7904 26.8772C12.4463 27.5332 13.3361 27.9017 14.2638 27.9017C15.1915 27.9017 16.0812 27.5332 16.7372 26.8772C17.3932 26.2212 17.7617 25.3315 17.7617 24.4038V23.0364L22.0953 22.5162C22.4475 22.4739 22.7828 22.3411 23.0686 22.1309C23.3543 21.9207 23.5809 21.6402 23.7262 21.3165C23.8715 20.9929 23.9306 20.6372 23.8978 20.284C23.865 19.9307 23.7414 19.592 23.539 19.3007C22.5579 17.8913 21.9824 16.2396 21.8752 14.5257L21.5941 10.0318C21.509 8.67073 20.9083 7.39328 19.9144 6.45958C18.9204 5.52589 17.6079 5.00616 16.2442 5.00623H15.5357V4.05225ZM12.2833 6.91418C11.4051 6.91408 10.5599 7.24868 9.9197 7.84986C9.27952 8.45104 8.89254 9.2736 8.83753 10.1501L8.55769 14.6452C8.42839 16.7071 7.7359 18.6939 6.55561 20.3895C6.54094 20.4105 6.53197 20.435 6.52958 20.4606C6.52718 20.4862 6.53144 20.5119 6.54194 20.5353C6.55244 20.5588 6.56882 20.5791 6.58949 20.5943C6.61016 20.6095 6.63442 20.6192 6.65991 20.6222L11.4133 21.1933C13.3072 21.4198 15.2203 21.4198 17.1143 21.1933L21.8676 20.6222C21.8931 20.6192 21.9174 20.6095 21.938 20.5943C21.9587 20.5791 21.9751 20.5588 21.9856 20.5353C21.9961 20.5119 22.0003 20.4862 21.9979 20.4606C21.9956 20.435 21.9866 20.4105 21.9719 20.3895C20.7921 18.6938 20.1 16.707 19.9711 14.6452L19.69 10.1501C19.635 9.2736 19.248 8.45104 18.6078 7.84986C17.9677 7.24868 17.1224 6.91408 16.2442 6.91418H12.2833ZM14.2638 25.9938C13.3861 25.9938 12.6738 25.2815 12.6738 24.4038V23.4498H15.8537V24.4038C15.8537 25.2815 15.1414 25.9938 14.2638 25.9938Z"
+                                    fill="black" />
+                                <path
+                                    d="M23.9453 7.14844C23.9453 9.35758 22.1545 11.1484 19.9453 11.1484C17.7362 11.1484 15.9453 9.35758 15.9453 7.14844C15.9453 4.9393 17.7362 3.14844 19.9453 3.14844C22.1545 3.14844 23.9453 4.9393 23.9453 7.14844Z"
+                                    fill="#137561" />
+                            </svg>
+                        </div>
+                        <div class="navbar-account">
+                            <div class="navbar-account-img">
+                                <img width="50px"
+                                    src="https://neweralive.na/wp-content/uploads/2024/06/lloyd-sikeba.jpg"
+                                    alt="profile" />
+                            </div>
+                            <div class="navbar-account-desc">
+                                <h4>{{request.user.username}}</h4>
+                                <!-- <p>@Saeed_musfir</p> -->
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+            <!-- Navbar end -->
 
-        <div class="col-md-3">
-            <div class="row p-1">
-                <div class="col-12 bg-light">
-                    <h2>Needs improvement</h2>
-                    <hr>
-                    <ul>
-                        {% for improvement in improvements %}
-                        <li><a href="">Something you need to work on</a></li>
-                        {% empty %}
-                        <p class="text-muted">You don't need to work on anything for now.</p>
+            <!-- row 2 -->
+            <div id="row-two">
+                <!-- Subjects -->
+                <div class="subjects">
+                    <div class="subjects-list">
+                        {% for subject in subjects %}
+                        <a class="text-dark" href="{% url 'web:open_subject' subject.id %}">
+                            <div class="subject">
+                                <div class="subject-desc">
+                                    <h3>{{ subject.subject_name }}</h3>
+                                    <p>عدد الفصول: {{subject.num_notes}}</p>
+                                </div>
+                                <div class="subject-progress">
+                                    <div style="height: 20px" class="progress" role="progressbar"
+                                        aria-label="Example with label" aria-valuenow="25" aria-valuemin="0"
+                                        aria-valuemax="100">
+                                        <div class="progress-bar"
+                                            style="width: 55%; background: linear-gradient(270deg,#b8e4fd 0%,#40a0be 100%);">
+                                            {{ subject.progress }}%
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
                         {% endfor %}
-                        <a href="">See all</a>
-                    </ul>
+                    </div>
                 </div>
-                <div class="col-12 bg-light mt-2">
-                    <h2>Upcoming events</h2>
-                    <hr>
-                    <ul>
-                        {% for event in events %}
-                        <li><a href="">Something you need to work on</a></li>
-                        {% empty %}
-                        <p class="text-muted">There are no upcoming events.</p>
-                        {% endfor %}
-                        <a href="">See all</a>
-                    </ul>
+                <!-- End Subjects -->
+
+                <div class="notifications">
+                    <div class="notifi-desc">
+                        <h3>فرصة للتحصين</h3>
+                        <a href="#">عرض الكل</a>
+                    </div>
+                    <div class="notifi-menu">
+                        <div class="notifi-item">
+                            <svg width="41" height="38" viewBox="0 0 41 38" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M40.2331 29.7129L24.861 3.01698C24.4158 2.25552 23.7789 1.6239 23.0138 1.18497C22.2487 0.746031 21.382 0.515076 20.4999 0.515076C19.6178 0.515076 18.7511 0.746031 17.986 1.18497C17.2208 1.6239 16.584 2.25552 16.1387 3.01698L0.766664 29.7129C0.334629 30.4518 0.106934 31.2924 0.106934 32.1483C0.106934 33.0043 0.334629 33.8448 0.766664 34.5838C1.20698 35.349 1.84295 35.9834 2.60935 36.4217C3.37574 36.86 4.24495 37.0866 5.1278 37.0781H35.8719C36.7542 37.086 37.6227 36.8591 38.3884 36.4208C39.1541 35.9825 39.7895 35.3485 40.2296 34.5838C40.6621 33.8452 40.8904 33.0048 40.891 32.1488C40.8917 31.2928 40.6646 30.4521 40.2331 29.7129ZM36.5768 32.4726C36.5053 32.5945 36.4023 32.6947 36.2785 32.7628C36.1547 32.8309 36.0149 32.8642 35.8737 32.8594H5.1278C4.98663 32.8642 4.84677 32.8309 4.72301 32.7628C4.59924 32.6947 4.49616 32.5945 4.42467 32.4726C4.36403 32.374 4.33193 32.2606 4.33193 32.1448C4.33193 32.0291 4.36403 31.9156 4.42467 31.817L19.7967 5.12108C19.8729 5.00392 19.9771 4.90763 20.0998 4.84097C20.2226 4.77431 20.3601 4.7394 20.4999 4.7394C20.6396 4.7394 20.7771 4.77431 20.8999 4.84097C21.0227 4.90763 21.1269 5.00392 21.203 5.12108L36.5733 31.817C36.6345 31.9153 36.6672 32.0286 36.6678 32.1443C36.6684 32.2601 36.6369 32.3737 36.5768 32.4726ZM18.3905 20.9062V15.2812C18.3905 14.7218 18.6127 14.1853 19.0083 13.7897C19.4039 13.3941 19.9404 13.1719 20.4999 13.1719C21.0593 13.1719 21.5958 13.3941 21.9914 13.7897C22.387 14.1853 22.6092 14.7218 22.6092 15.2812V20.9062C22.6092 21.4657 22.387 22.0022 21.9914 22.3978C21.5958 22.7934 21.0593 23.0156 20.4999 23.0156C19.9404 23.0156 19.4039 22.7934 19.0083 22.3978C18.6127 22.0022 18.3905 21.4657 18.3905 20.9062ZM23.3124 27.9375C23.3124 28.4937 23.1474 29.0375 22.8384 29.5C22.5293 29.9625 22.0901 30.323 21.5762 30.5359C21.0623 30.7488 20.4967 30.8045 19.9512 30.6959C19.4056 30.5874 18.9045 30.3196 18.5111 29.9262C18.1178 29.5329 17.8499 29.0317 17.7414 28.4862C17.6329 27.9406 17.6886 27.3751 17.9015 26.8612C18.1143 26.3473 18.4748 25.908 18.9373 25.599C19.3998 25.2899 19.9436 25.125 20.4999 25.125C21.2458 25.125 21.9612 25.4213 22.4886 25.9487C23.0161 26.4762 23.3124 27.1916 23.3124 27.9375Z"
+                                    fill="#2AD1B1" />
+                            </svg>
+                            <h4>قامت سارة محمد بإضافة مشروع تخرج</h4>
+                        </div>
+                        <div class="notifi-item">
+                            <svg width="41" height="38" viewBox="0 0 41 38" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M40.2331 29.7129L24.861 3.01698C24.4158 2.25552 23.7789 1.6239 23.0138 1.18497C22.2487 0.746031 21.382 0.515076 20.4999 0.515076C19.6178 0.515076 18.7511 0.746031 17.986 1.18497C17.2208 1.6239 16.584 2.25552 16.1387 3.01698L0.766664 29.7129C0.334629 30.4518 0.106934 31.2924 0.106934 32.1483C0.106934 33.0043 0.334629 33.8448 0.766664 34.5838C1.20698 35.349 1.84295 35.9834 2.60935 36.4217C3.37574 36.86 4.24495 37.0866 5.1278 37.0781H35.8719C36.7542 37.086 37.6227 36.8591 38.3884 36.4208C39.1541 35.9825 39.7895 35.3485 40.2296 34.5838C40.6621 33.8452 40.8904 33.0048 40.891 32.1488C40.8917 31.2928 40.6646 30.4521 40.2331 29.7129ZM36.5768 32.4726C36.5053 32.5945 36.4023 32.6947 36.2785 32.7628C36.1547 32.8309 36.0149 32.8642 35.8737 32.8594H5.1278C4.98663 32.8642 4.84677 32.8309 4.72301 32.7628C4.59924 32.6947 4.49616 32.5945 4.42467 32.4726C4.36403 32.374 4.33193 32.2606 4.33193 32.1448C4.33193 32.0291 4.36403 31.9156 4.42467 31.817L19.7967 5.12108C19.8729 5.00392 19.9771 4.90763 20.0998 4.84097C20.2226 4.77431 20.3601 4.7394 20.4999 4.7394C20.6396 4.7394 20.7771 4.77431 20.8999 4.84097C21.0227 4.90763 21.1269 5.00392 21.203 5.12108L36.5733 31.817C36.6345 31.9153 36.6672 32.0286 36.6678 32.1443C36.6684 32.2601 36.6369 32.3737 36.5768 32.4726ZM18.3905 20.9062V15.2812C18.3905 14.7218 18.6127 14.1853 19.0083 13.7897C19.4039 13.3941 19.9404 13.1719 20.4999 13.1719C21.0593 13.1719 21.5958 13.3941 21.9914 13.7897C22.387 14.1853 22.6092 14.7218 22.6092 15.2812V20.9062C22.6092 21.4657 22.387 22.0022 21.9914 22.3978C21.5958 22.7934 21.0593 23.0156 20.4999 23.0156C19.9404 23.0156 19.4039 22.7934 19.0083 22.3978C18.6127 22.0022 18.3905 21.4657 18.3905 20.9062ZM23.3124 27.9375C23.3124 28.4937 23.1474 29.0375 22.8384 29.5C22.5293 29.9625 22.0901 30.323 21.5762 30.5359C21.0623 30.7488 20.4967 30.8045 19.9512 30.6959C19.4056 30.5874 18.9045 30.3196 18.5111 29.9262C18.1178 29.5329 17.8499 29.0317 17.7414 28.4862C17.6329 27.9406 17.6886 27.3751 17.9015 26.8612C18.1143 26.3473 18.4748 25.908 18.9373 25.599C19.3998 25.2899 19.9436 25.125 20.4999 25.125C21.2458 25.125 21.9612 25.4213 22.4886 25.9487C23.0161 26.4762 23.3124 27.1916 23.3124 27.9375Z"
+                                    fill="#EFA83D" />
+                            </svg>
+
+                            <h4>لديك رسائل جديدة في مجتمع مطورو الويب</h4>
+                        </div>
+                        <div class="notifi-item">
+                            <svg width="41" height="38" viewBox="0 0 41 38" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M40.2331 29.7129L24.861 3.01698C24.4158 2.25552 23.7789 1.6239 23.0138 1.18497C22.2487 0.746031 21.382 0.515076 20.4999 0.515076C19.6178 0.515076 18.7511 0.746031 17.986 1.18497C17.2208 1.6239 16.584 2.25552 16.1387 3.01698L0.766664 29.7129C0.334629 30.4518 0.106934 31.2924 0.106934 32.1483C0.106934 33.0043 0.334629 33.8448 0.766664 34.5838C1.20698 35.349 1.84295 35.9834 2.60935 36.4217C3.37574 36.86 4.24495 37.0866 5.1278 37.0781H35.8719C36.7542 37.086 37.6227 36.8591 38.3884 36.4208C39.1541 35.9825 39.7895 35.3485 40.2296 34.5838C40.6621 33.8452 40.8904 33.0048 40.891 32.1488C40.8917 31.2928 40.6646 30.4521 40.2331 29.7129ZM36.5768 32.4726C36.5053 32.5945 36.4023 32.6947 36.2785 32.7628C36.1547 32.8309 36.0149 32.8642 35.8737 32.8594H5.1278C4.98663 32.8642 4.84677 32.8309 4.72301 32.7628C4.59924 32.6947 4.49616 32.5945 4.42467 32.4726C4.36403 32.374 4.33193 32.2606 4.33193 32.1448C4.33193 32.0291 4.36403 31.9156 4.42467 31.817L19.7967 5.12108C19.8729 5.00392 19.9771 4.90763 20.0998 4.84097C20.2226 4.77431 20.3601 4.7394 20.4999 4.7394C20.6396 4.7394 20.7771 4.77431 20.8999 4.84097C21.0227 4.90763 21.1269 5.00392 21.203 5.12108L36.5733 31.817C36.6345 31.9153 36.6672 32.0286 36.6678 32.1443C36.6684 32.2601 36.6369 32.3737 36.5768 32.4726ZM18.3905 20.9062V15.2812C18.3905 14.7218 18.6127 14.1853 19.0083 13.7897C19.4039 13.3941 19.9404 13.1719 20.4999 13.1719C21.0593 13.1719 21.5958 13.3941 21.9914 13.7897C22.387 14.1853 22.6092 14.7218 22.6092 15.2812V20.9062C22.6092 21.4657 22.387 22.0022 21.9914 22.3978C21.5958 22.7934 21.0593 23.0156 20.4999 23.0156C19.9404 23.0156 19.4039 22.7934 19.0083 22.3978C18.6127 22.0022 18.3905 21.4657 18.3905 20.9062ZM23.3124 27.9375C23.3124 28.4937 23.1474 29.0375 22.8384 29.5C22.5293 29.9625 22.0901 30.323 21.5762 30.5359C21.0623 30.7488 20.4967 30.8045 19.9512 30.6959C19.4056 30.5874 18.9045 30.3196 18.5111 29.9262C18.1178 29.5329 17.8499 29.0317 17.7414 28.4862C17.6329 27.9406 17.6886 27.3751 17.9015 26.8612C18.1143 26.3473 18.4748 25.908 18.9373 25.599C19.3998 25.2899 19.9436 25.125 20.4999 25.125C21.2458 25.125 21.9612 25.4213 22.4886 25.9487C23.0161 26.4762 23.3124 27.1916 23.3124 27.9375Z"
+                                    fill="#2AD1B1" />
+                            </svg>
+                            <h4>قام د. محمد زين الدين بإضافة اختبار نصفي</h4>
+                        </div>
+                        <div class="notifi-item">
+                            <svg width="41" height="38" viewBox="0 0 41 38" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M40.2331 29.7129L24.861 3.01699C24.4158 2.25553 23.7789 1.62392 23.0138 1.18498C22.2487 0.746046 21.382 0.515091 20.4999 0.515091C19.6178 0.515091 18.7511 0.746046 17.986 1.18498C17.2208 1.62392 16.584 2.25553 16.1387 3.01699L0.766664 29.7129C0.334629 30.4518 0.106934 31.2924 0.106934 32.1483C0.106934 33.0043 0.334629 33.8449 0.766664 34.5838C1.20698 35.349 1.84295 35.9834 2.60935 36.4217C3.37574 36.8601 4.24495 37.0866 5.1278 37.0781H35.8719C36.7542 37.086 37.6227 36.8591 38.3884 36.4208C39.1541 35.9825 39.7895 35.3485 40.2296 34.5838C40.6621 33.8452 40.8904 33.0048 40.891 32.1488C40.8917 31.2929 40.6646 30.4521 40.2331 29.7129ZM36.5768 32.4727C36.5053 32.5945 36.4023 32.6947 36.2785 32.7628C36.1547 32.8309 36.0149 32.8642 35.8737 32.8594H5.1278C4.98663 32.8642 4.84677 32.8309 4.72301 32.7628C4.59924 32.6947 4.49616 32.5945 4.42467 32.4727C4.36403 32.3741 4.33193 32.2606 4.33193 32.1448C4.33193 32.0291 4.36403 31.9156 4.42467 31.817L19.7967 5.1211C19.8729 5.00393 19.9771 4.90764 20.0998 4.84098C20.2226 4.77433 20.3601 4.73941 20.4999 4.73941C20.6396 4.73941 20.7771 4.77433 20.8999 4.84098C21.0227 4.90764 21.1269 5.00393 21.203 5.1211L36.5733 31.817C36.6345 31.9153 36.6672 32.0286 36.6678 32.1443C36.6684 32.2601 36.6369 32.3737 36.5768 32.4727ZM18.3905 20.9063V15.2813C18.3905 14.7218 18.6127 14.1853 19.0083 13.7897C19.4039 13.3941 19.9404 13.1719 20.4999 13.1719C21.0593 13.1719 21.5958 13.3941 21.9914 13.7897C22.387 14.1853 22.6092 14.7218 22.6092 15.2813V20.9063C22.6092 21.4657 22.387 22.0022 21.9914 22.3978C21.5958 22.7934 21.0593 23.0156 20.4999 23.0156C19.9404 23.0156 19.4039 22.7934 19.0083 22.3978C18.6127 22.0022 18.3905 21.4657 18.3905 20.9063ZM23.3124 27.9375C23.3124 28.4938 23.1474 29.0375 22.8384 29.5C22.5293 29.9626 22.0901 30.323 21.5762 30.5359C21.0623 30.7488 20.4967 30.8045 19.9512 30.696C19.4056 30.5874 18.9045 30.3196 18.5111 29.9262C18.1178 29.5329 17.8499 29.0318 17.7414 28.4862C17.6329 27.9406 17.6886 27.3751 17.9015 26.8612C18.1143 26.3473 18.4748 25.908 18.9373 25.599C19.3998 25.29 19.9436 25.125 20.4999 25.125C21.2458 25.125 21.9612 25.4213 22.4886 25.9488C23.0161 26.4762 23.3124 27.1916 23.3124 27.9375Z"
+                                    fill="#D12A52" />
+                            </svg>
+                            <h4>
+                                مادة الذكاء
+                                الاصطناعي، قم باختيار التقييم
+                            </h4>
+                        </div>
+                    </div>
                 </div>
+            </div>
+            <!-- row 3 -->
+            <div class="row-three">
+                <div class="chart">
+                    <canvas id="myChart" style="width: 100%"></canvas>
+                </div>
+                <!-- todo -->
+                <div class="todo">
+                    <div class="todo-title">
+                        <h3>المهام</h3>
+                        <a href="#">عرض الكل</a>
+                    </div>
+                    <div class="todo-tasks">
+                        <div class="todo-task">
+                            <div class="todo-task-title">
+                                <label class="checkbox-container">
+                                    <input type="checkbox" checked="checked" />
+                                    <span class="checkmark"></span>
+                                    أنواع الخوارزميات. بحث علمي
+                                </label>
+                            </div>
+                            <div class="todo-task-info">
+                                <p>خوارزميات وهياكل بيانات 2</p>
+                            </div>
+                        </div>
+                        <div class="todo-task">
+                            <div class="todo-task-title">
+                                <label class="checkbox-container">
+                                    <input type="checkbox" checked="checked" />
+                                    <span class="checkmark"></span>
+                                    <label for="">إنشاء متعرف للعين بلغة بايثون. مشروع عملي</label>
+                                </label>
+                            </div>
+                            <div class="todo-task-info">
+                                <p>الرؤية الحاسوبية</p>
+                            </div>
+                        </div>
+                        <div class="todo-task">
+                            <div class="todo-task-title">
+                                <label class="checkbox-container">
+                                    <input type="checkbox" />
+                                    <span class="checkmark"></span>
+                                    <label for="">اختبار قصير</label>
+                                </label>
+                            </div>
+                            <div class="todo-task-info">
+                                <p>نمذجة ومحاكاة</p>
+                            </div>
+                        </div>
+                        <div class="todo-task">
+                            <div class="todo-task-title">
+                                <label class="checkbox-container">
+                                    <input type="checkbox" />
+                                    <span class="checkmark"></span>
+                                    <label for="">تطوير موقع الكتروني لحجز فنادق. مشروع عملي جماعي</label>
+                                </label>
+                            </div>
+                            <div class="todo-task-info">
+                                <p>تطوير الويب</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End todo -->
             </div>
         </div>
     </div>
-</div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+        crossorigin="anonymous"></script>
+    <!-- Static files (JS) -->
+    <script src="{% static 'web/script.js' %}"></script>
+    <!-- chart -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <script>
+        const xValues = ["Quiz1", "Quiz2", "Quiz3", "Quiz4"];
+        const yValues = [60, 80, 93, 50];
+        new Chart("myChart", {
+            type: "line",
+            data: {
+                labels: xValues,
+                datasets: [
+                    {
+                        backgroundColor: "rgba(0,0,0,0)",
+                        borderColor: "#D578C7",
+                        data: yValues,
+                    },
+                ],
+            },
+            options: {
+                legend: {
+                    display: false,
+                },
+                scales: {
+                    yAxes: [
+                        {
+                            ticks: {
+                                min: 0,
+                                max: 100,
+                                callback: function (value) {
+                                    return value + " ٪ ";
+                                },
+                            },
+                        },
+                    ],
+                },
+            },
+        });
+    </script>
+</body>
 
-<script>
-    const model = document.querySelector('.add-subject');
-    function openSubject() {
-        model.classList.remove('d-none');
-        model.classList.add('d-flex');
-    }
-    function closeSubject() {
-        model.classList.remove('d-flex');
-        model.classList.add('d-none');
-    }
-    function openGraph(graphType) {
-        // Hide all graph containers
-        document.querySelector('.graph-container-quiz').classList.add('d-none');
-        document.querySelector('.graph-container-research').classList.add('d-none');
-        document.querySelector('.graph-container-projects').classList.add('d-none');
-
-        // Show the selected graph container
-        if (graphType === 'quiz') {
-            document.querySelector('.graph-container-quiz').classList.remove('d-none');
-        } else if (graphType === 'research') {
-            document.querySelector('.graph-container-research').classList.remove('d-none');
-        } else if (graphType === 'project') {
-            document.querySelector('.graph-container-projects').classList.remove('d-none');
-        }
-    }
-
-</script>
-{% endblock %}
-
-
-<!-- 
-
-OLD code
-
-
-
-<h1>Homepage</h1>
-{% if user.is_authenticated %}
-    <ul>
-        <li><a href="{% url 'web:logout_user' %}">Logout</a></li>
-    </ul>
-{% else %}
-    <ul>
-        <li><a href="{% url 'web:login_user' %}">Login</a></li>
-    </ul>
-{% endif %}
-</ul>
-<hr>
-<ul>
-    <li><a href="{% url 'web:ai_tutor' %}">AI tutor</a></li>
-    <li><a href="{% url 'web:ai_evaluator' %}">AI evaluator</a></li>
-    <li><a href="{% url 'web:ai_evaluator' %}">Practical assignments</a></li>
-    <li><a href="">Research</a></li>
-    <li><a href="">Group project</a></li>
-</ul>
-
--->
+</html>

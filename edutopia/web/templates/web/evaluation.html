@@ -1,0 +1,16 @@
+{% extends 'web/layout.html' %}
+
+{% block title %}
+<title>Evaluation</title>
+{% endblock %}
+
+{% block body %}
+{% if marks %}
+<div class="container p-5 m-3" style="background-color: white; border-radius: 2rem;">
+    <h1>Your score: {{marks}}</h1>
+</div>
+{% endif %}
+<div class="container p-5 m-3" style="background-color: white; border-radius: 2rem;">
+    {{ evaluation | safe }}
+</div>
+{% endblock %}

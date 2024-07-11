@@ -9,13 +9,21 @@ urlpatterns = [
     
 
     path("", views.index, name="index"),
+    path("Home/", views.landing, name='landing'),
 
     path("ai_tutor/<str:note_id>", views.ai_tutor, name="ai_tutor"),
     path("ai_evaluator/<str:note_id>/<str:exam_type>", views.ai_evaluator, name="ai_evaluator"),
     path("evaluate_student/", views.evaluate_student, name="evaluate_student"),
     path("important_questions/<str:note_id>", views.important_questions, name='important_questions'),
+
     path("ai_research/<str:note_id>", views.ai_researcher, name='ai_research'),
+    path("ai_research_evaluator", views.ai_research_evaluator, name='ai_research_evaluator'),
+
     path("ai_project_manager/<str:note_id>", views.ai_project_manager, name='ai_project_manager'),
+    path("ai_project_evaluator", views.ai_project_evaluator, name='ai_project_evaluator'),
+
+    path("upload_project/", views.upload_project, name='upload_project'),
+    path("add_collaborator/", views.add_collaborator, name='add_collaborator'),
 
     path('upload_note/', views.upload_note, name='upload_note'),
     path('remove_note/<str:note_id>/', views.remove_note, name='remove_note'),

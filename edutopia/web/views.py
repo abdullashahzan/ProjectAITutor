@@ -10,6 +10,9 @@ import os
 from .models import *
 import json, random
 
+def landing(request):
+    return render(request, "web/landing.html")
+
 def login_user(request):
     message = ""
     if request.method == "POST":
@@ -64,25 +67,41 @@ def upload_note(request):
         name = request.POST['name']
         note = Note(username=user, file=file, subject_id=subject_id, name=name)
         note.save()
+        print("Extracting text from file")
         notes = ai.extract_text_from_file(note.file.path)[:4000]
         note.note = notes
+        print("Extracting details from notes")
         content = ai.AI_notes_detail_extractor_prompt + " These are the notes of the student: " + notes
         answer = ai.respond(content)
         print(answer)
-        answer = answer.strip('][').split(",")
-        new_answer = []
-        for element in answer:
-            element = element.strip().replace("\"", "")
-            if str(element) == "no":
-                new_answer.append(False)
-            else:
-                new_answer.append(True)
-        note.research_required = new_answer[0]
-        note.practical_required = new_answer[1]
-        note.group_practical_required = new_answer[2]
+        print("Generating brief summary of the chapter")
+        content = "Generate a brief summary of what this chapter talks about and the skills student will gain from it. The output must be in beautiful html format so it is easier for student to understand. Keep it short and simple. Do not add h1 tags use anything else. These are the notes of the student: " + notes
+        note.note_brief = ai.respond(content) 
+        while True:
+            try:
+                answer = answer.strip('][').split(",")
+                new_answer = []
+                for element in answer:
+                    new_element = element.strip().replace("\"", "")
+                    if str(new_element).lower() == "no":
+                        new_answer.append(False)
+                    else:
+                        try:
+                            score = int(new_element)
+                        except:
+                            new_answer.append(True)
+                note.research_required = new_answer[0]
+                note.practical_required = new_answer[1]
+                note.group_practical_required = new_answer[2]
+                note.quality_score = score
+                break
+            except:
+                print("Failed to correctly extract data from notes, trying again.")
+                pass
         content = ai.AI_important_questions_prompt + " These are the notes of the student: " + notes
         note.important_questions = ai.respond(content)
         note.save()
+
         subject = Subject.objects.get(id=subject_id)
         subject.num_notes += 1
         subject.save()
@@ -100,8 +119,14 @@ def remove_note(request, note_id):
     return redirect(referrer or reverse('web:index'))
 
 def open_note(request, note_id):
+    quality_score= Note.objects.get(id=note_id).quality_score
+    if quality_score >= 70:
+        quality_score_good = True
+    else:
+        quality_score_good = False
     return render(request, 'web/note.html', {
-        "note":Note.objects.get(id=note_id)
+        "note":Note.objects.get(id=note_id),
+        "quality_score_good": quality_score_good
     })
 
 def add_subject(request):
@@ -124,7 +149,7 @@ def open_subject(request, subject_id):
 def index(request):
     try:
         userprofile = UserProfile.objects.get(user=request.user)
-        subjects = Subject.objects.filter(username=request.user.username)[:5]
+        subjects = Subject.objects.filter(username=request.user.username)[:6]
         return render(request, 'web/index.html', {
             "userprofile":userprofile,
             "subjects":subjects,
@@ -184,7 +209,6 @@ def evaluate_student(request):
         questions = quiz.questions.split("!--!")[:-1]
         answers = quiz.answers.split("!--!")[-1]
         user_answers = ""
-        print(questions)
         for question in questions:
             user_answer = request.POST.get(question)
             print(user_answer)
@@ -201,18 +225,12 @@ def evaluate_student(request):
                 if quiz.quiz_type == "MCQ":
                     if answer == user_answer:
                         quiz.score += 1
-                elif quiz.quiz_type == "Written":
-                    print("comparing question")
-                    content = ai.AI_compare_answers_prompt + "This is student's answer: " + str(user_answer) + " This is the correct answer: " + answer
-                    output = ai.respond(content)
-                    print('Finished comparing, comparing another one if exists.')
-                    if output == 'c':
-                        quiz.score += 1
         quiz.total_score = len(questions)
         quiz.save()
-        content = ai.AI_suggester_prompt + " These are the notes of the student: " + note.note + " This is the quiz data of the student: " + json.dumps(data)
+        content = ai.AI_quiz_evaluator_prompt + " These are the notes of the student: " + note.note + " This is the quiz data of the student: " + json.dumps(data)
         response = ai.respond(content)
-        return render(request, 'web/results.html', {'quiz': quiz, 'suggestion': response, 'quiz_data': json_data})
+        marks = f"{quiz.score} / {quiz.total_score}"
+        return render(request, 'web/evaluation.html', {'marks': marks, 'evaluation': response})
 
 def ai_researcher(request, note_id):
     note = Note.objects.get(id=note_id)
@@ -223,9 +241,21 @@ def ai_researcher(request, note_id):
         content = ai.AI_researcher_prompt + " these are the notes of the students: " + note.note
         research_topic = ai.respond(content)
         Research(username=request.user.username, research=research_topic, note_id=note_id).save()
-    if request.method == "POST":
-        return render(request, 'web/ai_researcher.html', {'research':research_topic})
-    return render(request, 'web/ai_researcher.html', {'research':research_topic})
+    return render(request, 'web/ai_researcher.html', {'research':research_topic, 'note':note})
+
+def ai_research_evaluator(request):
+    if request.method == "POST" and request.FILES.get('file'):
+        note_id = request.POST['note_id']
+        research = Research.objects.get(username=request.user.username, note_id=note_id)
+        research_topic = research.research
+        file = request.FILES['file']
+        research = Research.objects.get(username=request.user.username, note_id=note_id)
+        research.file = file
+        research.save()
+        text = ai.extract_text_from_file(research.file.path)[:2000]
+        content = ai.AI_research_evaluator_prompt + " This is the research topic that the student was asked to research: " + research_topic + " This is the research report submitted by the student: " + text
+        response = ai.respond(content)
+        return render(request, 'web/evaluation.html', {'evaluation':response})
 
 def ai_project_manager(request, note_id):
     note = Note.objects.get(id=note_id)
@@ -236,9 +266,45 @@ def ai_project_manager(request, note_id):
         project = ai.respond(content)
         data = Project(username=request.user.username, project=project, note_id=note_id)
         data.save()
+    collaborators = data.collaborators.split(",")[:-1]
+    return render(request, 'web/ai_practical.html', {'project':data, "collaborators":collaborators, 'note':note})
+
+def ai_project_evaluator(request):
+    if request.method == "POST" and request.FILES.get('file'):
+        note_id = request.POST['note_id']
+        project = Project.objects.get(username=request.user.username, note_id=note_id)
+        project_topic = project.project
+        file = request.FILES['file']
+        project.file = file
+        project.save()
+        text = ai.extract_text_from_file(project.file.path)[:2000]
+        content = ai.AI_research_evaluator_prompt + " This is the research topic that the student was asked to research: " + project_topic + " This is the research report submitted by the student: " + text
+        response = ai.respond(content)
+        return render(request, 'web/evaluation.html', {'evaluation':response})
+
+def upload_project(request):
     if request.method == "POST":
-        return render(request, 'web/ai_researcher.html', {'project':data})
-    return render(request, 'web/ai_practical.html', {'project':data})
+        file = request.FILES['file']
+        project_id = request.POST['project_id']
+        data = Project.objects.get(id=project_id)
+        data.file = file
+        data.save()
+        text = ai.extract_text_from_file(data.file.path)
+        content = ai.AI_project_evaluator_prompt + " This is the project that the student was asked to do: " + data.project + " This is the project report submitted by the student: " + text + "And the people who did this project are " + data.collaborators
+        response = ai.respond(content)
+        data.evaluation = response
+        data.save()
+    return render(request, "web/project_evaluation.html", {"project":data, "response":response})
+
+def add_collaborator(request):
+    if request.method == "POST":
+        project_id = request.POST['project_id']
+        username = request.POST['username']
+        project = Project.objects.get(id=project_id)
+        project.collaborators += f"{username},"
+        project.save()
+    referrer = request.META.get('HTTP_REFERER')
+    return redirect(referrer or reverse('web:index'))
 
 def important_questions(request, note_id):
     note = Note.objects.get(id=note_id)

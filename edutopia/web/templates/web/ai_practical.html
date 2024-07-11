@@ -5,17 +5,54 @@
 {% endblock %}
 
 {% block body %}
-<h1>Practical project</h1>
+<div class="container p-5 m-3" style="background-color: #fff; border-radius: 2rem;">
+    <p>{{project.project | safe}}</p>
+    <hr>
+    <form method="post" action="{% url 'web:ai_project_evaluator' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="formFile" class="form-label"><strong>Upload your project report:</strong></label>
+            <input class="form-control" type="file" id="file" name="file" required>
+        </div>
+        <input type="hidden" name="note_id" value="{{note.id}}">
+        <input type="hidden" name="project_id" value="{{project.id}}">
+        <button type="submit" class="btn btn-success">Upload</button>
+    </form>
+    <div id="uploaded-file"></div>
+    <hr>
+    {% if note.group_practical_required == True %}
+    <p class="text-success">This project can be done in a group!</p>
+    <div class="row bg-light p-5">
+        <div class="col-5">
+            <p>Please enter the username of your friend or classmate you want to collaborate with</p>
+            <form action="{% url 'web:add_collaborator' %}" method="post">
+                {% csrf_token %}
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">@</span>
+                    <input type="text" class="form-control" placeholder="Username" aria-label="Username"
+                        aria-describedby="basic-addon1" name="username">
+                </div>
+                <input type="hidden" name="project_id" value="{{project.id}}">
+                <input type="submit" value="Send invite" class="btn btn-success">
+            </form>
+        </div>
+        <div class="col-2"></div>
+        <div class="col-5">
+            <h3>People you have collborated with</h3>
+            <hr>
+            {% for collaborator in collaborators %}
+            <p>@{{collaborator}}</p>
+            {% empty %}
+            <p>You have not collaborated with anyone.</p>
+            {% endfor %}
+        </div>
+    </div>
+    <br><br>
+
+    {% else %}
+    <p>This project is not eligible for group work.</p>
+    {% endif %}
+</div>
+
 <hr>
-<p>{{project.project}}</p>
-<hr>
-<p><strong>AI project manager is going to judge it for you</strong></p>
-<form method="post" action="{% url 'web:upload_note' %}" enctype="multipart/form-data">
-    {% csrf_token %}
-    <label for="file">Upload the report about your project:</label>
-    <input type="file" id="file" name="file" required>
-    <input type="hidden" name="subject_id" value="{{subject.id}}">
-    <button type="submit">Upload</button>
-</form>
-<div id="uploaded-file"></div>
 {% endblock %}

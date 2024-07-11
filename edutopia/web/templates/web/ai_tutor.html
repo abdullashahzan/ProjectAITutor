@@ -13,20 +13,45 @@
     </p>
     <hr><br>
 
-    <!-- Question form -->
-    <form id="question-form" method="post">
-        {% csrf_token %}
-        <input type="text" id="question-input" name="question" placeholder="Ask a question">
-        <button type="submit">Submit</button>
-    </form>
-    <br>
+    <!-- text box -->
+    <div class="chat">
+        <div class="message-container"></div>
+        <div class="textbox-container">
 
-    <!-- Container to display the response -->
-    <p><strong>Responses:</strong></p> <br>
-    <div id="response-container"></div>
+            <form class="send-container" id="question-form" method="post">
+                {% csrf_token %}
+                <div class="text-box">
+                    <div class="share">
+                        <label for="file-upload" class="custom-file-upload">
+                            <svg width="42" height="28" viewBox="0 0 42 28" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M31.6438 27.6111L31.575 21.3935L25.3574 21.4623L25.3116 17.3172L31.5292 17.2485L31.4604 11.0309L35.6054 10.985L35.6742 17.2026L41.8918 17.1338L41.9376 21.2788L35.7201 21.3476L35.7889 27.5652L31.6438 27.6111ZM19.1399 21.5311L10.8498 21.6228C7.98276 21.6545 5.52807 20.6709 3.48568 18.6718C1.44329 16.6728 0.405557 14.2404 0.372469 11.3748C0.339381 8.50924 1.32305 6.05455 3.32347 4.01077C5.32389 1.96698 7.75621 0.929243 10.6204 0.897552L18.9105 0.805828L18.9564 4.95088L10.6663 5.0426C8.9392 5.06171 7.47785 5.68244 6.28225 6.90479C5.08666 8.12714 4.49841 9.60187 4.51752 11.329C4.53663 13.0561 5.15736 14.5174 6.37971 15.713C7.60206 16.9086 9.07679 17.4969 10.8039 17.4778L19.094 17.386L19.1399 21.5311ZM12.8306 13.3098L12.7847 9.16473L29.3649 8.98128L29.4108 13.1263L12.8306 13.3098ZM41.823 10.9162L37.6779 10.9621C37.6588 9.23497 37.0381 7.77362 35.8157 6.57803C34.5934 5.38243 33.1187 4.79419 31.3916 4.81329L23.1015 4.90502L23.0556 0.759966L31.3457 0.668242C34.2127 0.636521 36.6681 1.62018 38.7119 3.61922C40.7556 5.61826 41.7927 8.05059 41.823 10.9162Z"
+                                    fill="#137561" />
+                            </svg>
+                        </label>
+                        <input id="file-upload" type="file" class="ai_tutor_file_upload" />
+                    </div>
+                    <input type="text" id="question-input" name="question" class="send-button" placeholder="اكتب رسالة" />
+                    <button type="submit" class="send-button">
+                        <svg width="37" height="36" viewBox="0 0 37 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <g clip-path="url(#clip0_261_5295)">
+                                <path
+                                    d="M34.7113 19.7213L27.32 24.5476V32.6138C27.365 34.0651 25.4525 34.8751 24.44 33.8063L19.985 29.3513L13.7525 33.4238C13.4713 33.6039 13.1562 33.7051 12.83 33.7051C12.1325 33.7051 11.48 33.2551 11.2437 32.6026L0.680046 3.96007C0.601284 3.73512 0.567501 3.49885 0.601284 3.27383C0.646263 2.10385 1.94004 1.37258 2.99754 1.85632L34.5088 16.7851C35.6788 17.2914 35.8025 19.0576 34.7113 19.7213ZM10.355 9.07886L23.9788 22.7026L30.3463 18.5401L10.355 9.07886Z"
+                                    fill="white" />
+                            </g>
+                            <defs>
+                                <clipPath id="clip0_261_5295">
+                                    <rect width="36" height="36" fill="white" transform="matrix(-1 0 0 1 36.0276 0)" />
+                                </clipPath>
+                            </defs>
+                        </svg>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-    <br>
-    <a href="{% url 'web:index' %}">Home</a>
 </div>
 
 <script>
@@ -37,7 +62,7 @@
             const csrfToken = $('input[name="csrfmiddlewaretoken"]').val();
             const question = $('#question-input').val();
 
-            if ('{{is_note}}' == 'no'){
+            if ('{{is_note}}' == 'no') {
                 var url_link = '/ai_tutor/0'
             } else {
                 var url_link = '/ai_tutor/{{note.id}}'
@@ -55,13 +80,40 @@
                 }),
                 success: function (response) {
                     // Update the response container with the server's response
-                    $('#response-container').html('<p>' + response.message + '</p>');
+                    $('.message-container').html(`
+                    <div class='user'>
+                    <img src="https://neweralive.na/wp-content/uploads/2024/06/lloyd-sikeba.jpg">
+                    <p>${ question }</p>
+                    </div>
+                    <div class="bot">
+                        <svg width="33" height="33" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M16.5189 8.63014C18.4469 8.63014 20.0098 7.14593 20.0098 5.31507C20.0098 3.48421 18.4469 2 16.5189 2C14.591 2 13.0281 3.48421 13.0281 5.31507C13.0281 7.14593 14.591 8.63014 16.5189 8.63014Z" stroke="#F4F4F4" stroke-width="2.28677"/>
+                    <path d="M27.9847 20.1657C29.9127 20.1657 31.4756 18.6695 31.4756 16.8237C31.4756 14.978 29.9127 13.4817 27.9847 13.4817C26.0568 13.4817 24.4939 14.978 24.4939 16.8237C24.4939 18.6695 26.0568 20.1657 27.9847 20.1657Z" stroke="#F4F4F4" stroke-width="2.28677"/>
+                    <path d="M16.5189 31C18.4469 31 20.0098 29.5158 20.0098 27.6849C20.0098 25.8541 18.4469 24.3699 16.5189 24.3699C14.591 24.3699 13.0281 25.8541 13.0281 27.6849C13.0281 29.5158 14.591 31 16.5189 31Z" stroke="#F4F4F4" stroke-width="2.28677"/>
+                    <path d="M4.85442 26.1487C6.79803 26.1487 8.37364 24.6645 8.37364 22.8336C8.37364 21.0028 6.79803 19.5186 4.85442 19.5186C2.91081 19.5186 1.33521 21.0028 1.33521 22.8336C1.33521 24.6645 2.91081 26.1487 4.85442 26.1487Z" stroke="#F4F4F4" stroke-width="2.28677"/>
+                    <path d="M4.85442 13.1582C6.79803 13.1582 8.37364 11.6619 8.37364 9.81614C8.37364 7.9704 6.79803 6.47412 4.85442 6.47412C2.91081 6.47412 1.33521 7.9704 1.33521 9.81614C1.33521 11.6619 2.91081 13.1582 4.85442 13.1582Z" stroke="#F4F4F4" stroke-width="2.28677"/>
+                    <path d="M16.4904 18.1712C18.0578 18.1712 19.3285 16.9766 19.3285 15.5029C19.3285 14.0293 18.0578 12.8347 16.4904 12.8347C14.923 12.8347 13.6523 14.0293 13.6523 15.5029C13.6523 16.9766 14.923 18.1712 16.4904 18.1712Z" stroke="#F4F4F4" stroke-width="2.28677"/>
+                    <path d="M7.86279 8.14482L13.0849 6.15039" stroke="#F4F4F4" stroke-width="2.28677"/>
+                    <path d="M18.988 7.71387L25.5156 14.5596" stroke="#F4F4F4" stroke-width="2.28677"/>
+                    <path d="M25.8561 19.5186L19.0447 25.3401" stroke="#F4F4F4" stroke-width="2.28677"/>
+                    <path d="M6.78394 12.5652L14.3332 25.0708" stroke="#F4F4F4" stroke-width="2.28677"/>
+                    <path d="M7.91943 24.3699L13.028 26.5799" stroke="#F4F4F4" stroke-width="2.28677"/>
+                    <path d="M6.15991 19.734L14.5606 8.14478" stroke="#F4F4F4" stroke-width="2.28677"/>
+                    <path d="M8.0896 11.1096L13.9928 14.236" stroke="#F4F4F4" stroke-width="2.28677"/>
+                    <path d="M19.3289 15.7993L24.4942 16.1766" stroke="#F4F4F4" stroke-width="2.28677"/>
+                    <path d="M16.4905 18.1709V24.3698" stroke="#F4F4F4" stroke-width="2.28677"/>
+                    </svg>
+
+                    <p>${response.message }</p>
+                    </div>
+                    `);
                 },
                 error: function (error) {
                     console.error('Error:', error);
                     $('#response-container').html('<p>An error occurred. Please try again.</p>');
                 }
             });
+            $('#question-input').val('');
         });
     });
 </script>

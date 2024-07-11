@@ -5,5 +5,10 @@
 {% endblock %}
 
 {% block body %}
-<p>{{note.important_questions | safe}}</p>
+<div class="container-fluid mx-2 p-5" style="background-color: #fff; border-radius: 2rem;">
+    <h1>Question bank</h1>
+    <p class="text-dark">Questions extracted by Aya from the chapter.</p>
+    <hr>
+    <p>{{note.important_questions | safe}}</p>
+</div>
 {% endblock %}

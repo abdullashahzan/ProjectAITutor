@@ -5,16 +5,18 @@
 {% endblock %}
 
 {% block body %}
-
-<h1>OOP Quiz</h1>
-<form method="post" action="{% url 'web:evaluate_student' %}">
-    <input type="hidden" name="quiz_id" value="{{quiz.id}}">
-    <input type="hidden" name="note_id" value="{{note.id}}">
-    {% csrf_token %}
-    {% for question, options in test.test.items %}
-    <div>
-        <p><strong>{{ question }}</strong></p>
-        {% if quiz.quiz_type == 'MCQ' %}
+<div class="container p-5 m-3" style="background-color: #fff; border-radius: 2rem;">
+    <h1>Skill assessment</h1>
+    <p>The following assessment will test your mastery in each topic of the chapter and provide you with a feedback on your performance.</p>
+    <hr>
+    <form method="post" action="{% url 'web:evaluate_student' %}">
+        <input type="hidden" name="quiz_id" value="{{quiz.id}}">
+        <input type="hidden" name="note_id" value="{{note.id}}">
+        {% csrf_token %}
+        {% for question, options in test.test.items %}
+        <div>
+            <p><strong>{{ question }}</strong></p>
+            {% if quiz.quiz_type == 'MCQ' %}
             {% for option in options %}
             <div>
                 <label>
@@ -23,12 +25,15 @@
                 </label>
             </div>
             {% endfor %}
-        {% else %}
-        <textarea name="{{ question }}"></textarea>
-        {% endif %}
-    </div>
-    {% endfor %}
-    <button type="submit" name="answers">Submit</button>
-</form>
+            {% else %}
+            <textarea name="{{ question }}"></textarea>
+            {% endif %}
+        </div>
+        <br>
+        <br>
+        {% endfor %}
+        <button type="submit" name="answers" class="btn btn-success">Submit</button>
+    </form>
+</div>
 
 {% endblock %}

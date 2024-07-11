@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 # Create your models here.
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    needs_improvement = models.CharField(max_length=4000, default="")
 
     def __str__(self):
         return f"{self.user.username}'s profile"
@@ -19,9 +20,11 @@ class Note(models.Model):
     practical_required = models.BooleanField(default=False)
     group_practical_required = models.BooleanField(default=False)
     important_questions = models.CharField(default="", max_length=10000)
+    quality_score = models.FloatField(default=0)
+    note_brief = models.CharField(max_length=10000, default="")
 
     def __str__(self):
-        return self.username + "'s note"
+        return self.username + f"'s {self.name} note"
 
 class Research(models.Model):
     username = models.CharField(max_length=256)
@@ -29,6 +32,7 @@ class Research(models.Model):
     submitted_research = models.CharField(max_length=2000, default="")
     score = models.FloatField(default=0)
     note_id = models.CharField(default='0', max_length=256)
+    file = models.FileField(upload_to='web/Research/', default="")
 
     def __str__(self):
         return f"{self.username}'s research"
@@ -36,9 +40,11 @@ class Research(models.Model):
 class Project(models.Model):
     username = models.CharField(max_length=256)
     project = models.CharField(max_length=4000)
-    submitted_project = models.CharField(max_length=2000, default="")
+    evaluation = models.CharField(max_length=2000, default="")
     score = models.FloatField(default=0)
     note_id = models.CharField(default='0', max_length=256)
+    collaborators = models.CharField(default="", max_length=1000)
+    file = models.FileField(upload_to='web/Project/', default="")
 
     def __str__(self):
         return f"{self.username}'s research"
