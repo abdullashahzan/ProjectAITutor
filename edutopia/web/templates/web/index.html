@@ -160,9 +160,16 @@
             <!-- Navbar end -->
 
             <!-- row 2 -->
+
             <div id="row-two">
                 <!-- Subjects -->
                 <div class="subjects">
+                    <div class="card col-4" style="width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">Add a subject</h5>
+                            <button onclick="openSubject()">Add</button>
+                        </div>
+                    </div>
                     <div class="subjects-list">
                         {% for subject in subjects %}
                         <a class="text-dark" href="{% url 'web:open_subject' subject.id %}">
@@ -186,6 +193,7 @@
                         {% endfor %}
                     </div>
                 </div>
+                
                 <!-- End Subjects -->
 
                 <div class="notifications">
