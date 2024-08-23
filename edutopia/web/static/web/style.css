@@ -154,13 +154,13 @@ a.sidebar-link:hover {
 }
 
 .navbar .navbar-welcome {
-  direction: rtl;
+  direction: ltr;
 }
 
 .navbar .navbar-details {
   display: flex;
   justify-content: space-between;
-  direction: rtl;
+  direction: ltr;
   align-items: center;
 }
 
@@ -241,7 +241,7 @@ p {
   position: fixed;
 
   bottom: 0;
-  direction: rtl;
+  direction: ltr;
   left: 110px;
   margin: 30px 15px;
 }
@@ -251,7 +251,7 @@ p {
   height: 50px;
   border-radius: 20px;
   background-color: #f2f2f2;
-  direction: rtl;
+  direction: ltr;
   border: none;
   padding: 0px 10px;
 }
@@ -271,7 +271,7 @@ p {
 
 .message-container .user {
   display: flex;
-  direction: rtl;
+  direction: ltr;
   padding-top: 20px;
   gap: 1rem;
 }
@@ -471,13 +471,13 @@ a.sidebar-link:hover {
 }
 
 .navbar .navbar-welcome {
-  direction: rtl;
+  direction: ltr;
 }
 
 .navbar .navbar-details {
   display: flex;
   justify-content: space-between;
-  direction: rtl;
+  direction: ltr;
   align-items: center;
 }
 
@@ -518,19 +518,19 @@ p {
 .title h1 {
   font-weight: 700;
   font-size: 70px;
-  direction: rtl;
+  direction: ltr;
 }
 
 .cards {
   display: flex;
   justify-content: space-around;
-  direction: rtl;
+  direction: ltr;
   margin: 40px 0px;
 }
 
 .cards .card {
   width: 392px;
-  direction: rtl;
+  direction: ltr;
   padding: 20px;
   border-radius: 20px;
 }
@@ -580,7 +580,7 @@ p {
   margin: 20px 0px;
   margin-left: 35px;
   background-color: #fff;
-  direction: rtl;
+  direction: ltr;
 }
 
 .notes-container .header {
@@ -787,13 +787,13 @@ a.sidebar-link:hover {
 }
 
 .navbar .navbar-welcome {
-  direction: rtl;
+  direction: ltr;
 }
 
 .navbar .navbar-details {
   display: flex;
   justify-content: space-between;
-  direction: rtl;
+  direction: ltr;
   align-items: center;
 }
 
@@ -830,7 +830,7 @@ p {
 /* row 2 */
 #row-two {
   display: flex;
-  direction: rtl;
+  direction: ltr;
 }
 
 /* Subjects */
@@ -917,7 +917,7 @@ p {
 .row-three {
   display: flex;
   justify-content: space-between;
-  direction: rtl;
+  direction: ltr;
 }
 
 
@@ -1131,7 +1131,7 @@ button {
 }
 
 .hero .hero-content {
-  direction: rtl;
+  direction: ltr;
 }
 
 .hero .hero-content h1 {
@@ -1186,7 +1186,7 @@ button {
   align-items: stretch;
   /*stretches all cards same height*/
   justify-content: space-around;
-  direction: rtl;
+  direction: ltr;
 }
 
 .cards .card {

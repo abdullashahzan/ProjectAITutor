@@ -8,7 +8,7 @@ import cv2
 
 # Keep it highly secure (DO NOT SHARE IT WITH ANYONE!)
 client = Groq(
-    api_key="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",
+    api_key="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",
 )
 
 AI_tutor_prompt = "You are an AI tutor that is focused on helping students by explaining them their notes when asked. You are friendly and use simple language. You will do whatever the student asks you to do. Make sure to answer as correctly as possible and answer only what the student has asked. "

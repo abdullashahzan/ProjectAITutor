@@ -7,7 +7,7 @@
 {% block body %}
 
 <h1>Quiz Results</h1>
-<p>Your score: {{ quiz.score }} / {{ quiz.total_score }}</p>
+<p>Your score: {{ quiz.score }} / {{ quiz.total_score }}  (Not accurate as the AI does not have training data yet)</p>
 <hr>
 
 {% for question, answers in quiz_data.items %}

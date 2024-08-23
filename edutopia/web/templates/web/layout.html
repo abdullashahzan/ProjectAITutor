@@ -39,13 +39,13 @@
                 <li class="sidebar-item">
                     <a href="{% url 'web:index' %}" class="sidebar-link">
                         <i class="lni lni-user"></i>
-                        <span>لوحة التحكم</span>
+                        <span>Dashboard</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
                     <a href="{% url 'web:ai_tutor' 0 %}" class="sidebar-link">
                         <i class="lni lni-agenda"></i>
-                        <span>معلم</span>
+                        <span>Tutor</span>
                     </a>
                 </li>
                 <!-- <li class="sidebar-item">
@@ -89,13 +89,13 @@
                 <li class="sidebar-item">
                     <a href="#" class="sidebar-link">
                         <i class="lni lni-popup"></i>
-                        <span>الدردشات</span>
+                        <span>AI Chat</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
                     <a href="#" class="sidebar-link">
                         <i class="lni lni-cog"></i>
-                        <span>بنك المهارات</span>
+                        <span>Skills Bank</span>
                     </a>
                 </li>
             </ul>
@@ -119,13 +119,13 @@
             <!-- Navbar -->
             <div class="navbar">
                 <div class="navbar-welcome">
-                    <h1>مرحبًا {{request.user.username}}, أتمنى لك يومًا رائعًا</h1>
-                    <p>إنك تحقق تقدمًا ملحوظًا بناءً على تقييماتك!</p>
+                    <h1>Hello {{request.user.username}}, have a great day!</h1>
+                    <p>You are making significant progress based on your assessments!</p>
                 </div>
                 <div class="navbar-details">
                     <div class="navbar-search">
                         <form class="form-inline">
-                            <input class="form-control mr-sm-2" type="search" placeholder="البحث" aria-label="Search" />
+                            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
                         </form>
                     </div>
                     <div class="navbar-settings">

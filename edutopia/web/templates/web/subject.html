@@ -12,10 +12,10 @@
 <!-- Cards -->
 <div class="cards">
     <div class="card">
-        <h1>المشاريع العملية</h1>
+        <h1>Practical projects</h1>
         <div class="desc">
             <div>
-                <p>عدد المشاريع</p>
+                <p>Number of projects</p>
                 <div class="circles">
                     <div id="green-circle" class="circle"></div>
                     <div id="green-circle" class="circle"></div>
@@ -23,7 +23,7 @@
                 </div>
             </div>
             <div>
-                <p>متوسط الدرجات</p>
+                <p>Average grades</p>
                 <div class="grad">
                     <span>87.1%</span>
                 </div>
@@ -31,10 +31,10 @@
         </div>
     </div>
     <div class="card">
-        <h1>البحوث العلمية</h1>
+        <h1>Scientific research</h1>
         <div class="desc">
             <div>
-                <p>عدد المشاريع</p>
+                <p>Number of projects</p>
                 <div class="circles">
                     <div id="green-circle" class="circle"></div>
                     <div class="circle"></div>
@@ -42,7 +42,7 @@
                 </div>
             </div>
             <div>
-                <p>متوسط الدرجات</p>
+                <p>Average grades</p>
                 <div class="grad">
                     <span>65%</span>
                 </div>
@@ -50,10 +50,10 @@
         </div>
     </div>
     <div class="card">
-        <h1>المشاريع الجماعية</h1>
+        <h1>Group projects</h1>
         <div class="desc">
             <div>
-                <p>عدد المشاريع</p>
+                <p>Number of projects</p>
                 <div class="circles">
                     <div id="green-circle" class="circle"></div>
                     <div id="green-circle" class="circle"></div>
@@ -61,7 +61,7 @@
                 </div>
             </div>
             <div>
-                <p>متوسط الدرجات</p>
+                <p>Average grades</p>
                 <div class="grad">
                     <span>100%</span>
                 </div>
@@ -73,8 +73,8 @@
 <!-- notes -->
 <div class="notes-container">
     <div class="header">
-        <h1>المواد العلمية</h1>
-        <a href="#">عرض الكل</a>
+        <h1>Uploaded notes</h1>
+        <a href="#">Show all</a>
     </div>
     <hr>
     <div class="notes">
@@ -100,7 +100,7 @@
                     </div>
                 </div>
             </div>
-            <button><a href="{% url 'web:open_note' note.id %}" class="card-link text-light">فتح</a></button>
+            <button><a href="{% url 'web:open_note' note.id %}" class="card-link text-light">Open</a></button>
             <a href="{% url 'web:remove_note' note.id %}" class="card-link text-danger"><i class="bi bi-trash"></i></a>
         </div>
         <hr>
